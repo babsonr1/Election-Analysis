@@ -8,7 +8,8 @@ import csv
 import os.path
 # Assign a variable for the file to load and the path.
 file_to_load = os.path.join("..", "Resources", "election_results.csv")
-file_to_save = os.path.join("..", "Resources", "Analysis", "Election Analysis.txt")
+file_to_save = os.path.join("..", "Resources", "Analysis", "Election-Analysis.txt")
+
 #variables needed
 total_votes = 0
 candidate_options = []
@@ -36,34 +37,33 @@ with open(file_to_load) as election_data:
     #assigning votes to the correct candidates
     candidate_votes[candidate_name] += 1
 
-#find the votes and percantages of each candidate
-for candidate_name in candidate_votes:
-  votes = candidate_votes[candidate_name]
-  vote_percentage = float(votes) / float(total_votes) * 100
-  print(f"{candidate_name}: {vote_percentage: .1f}% ({votes:,})\n")
-
-  #determining who had the most votes
-  if (votes > winning_count) and (vote_percentage > winning_percentage):
-    winning_count = votes
-    winning_candidate = candidate_name
-    winning_percentage = vote_percentage
-winning_candidate_summary = (
-  f"--------------------\n"
-  f"Winner: {winning_candidate}\n"
-  f"Winning Vote Count: {winning_count:,} \n"
-  f"Winning Percentage: {winning_percentage:.1f}%\n"
-  f"--------------------\n"
-)
-print(winning_candidate_summary)
-
-
-    
-print(total_votes)
-print(candidate_votes)
-
+with open(file_to_save, "w") as txt_file:
+  election_results = (
+    f"\n Election Results \n"
+    f"-------------------- \n"
+    f"Total Votes: {total_votes:,}\n"
+    f"-------------------- \n"
+  )
+  print(election_results, end ="")
+  txt_file.write(election_results)
   
-    
+  #find the votes and percantages of each candidate
+  for candidate_name in candidate_votes:
+    votes = candidate_votes[candidate_name]
+    vote_percentage = float(votes) / float(total_votes) * 100
+    candidate_results = (f"{candidate_name}: {vote_percentage: .1f}% ({votes:,})\n")
+    txt_file.write(candidate_results)
 
-with open(file_to_save, "w") as outfile:
-  outfile.write(str(headers))
-
+    #determining who had the most votes
+    if (votes > winning_count) and (vote_percentage > winning_percentage):
+      winning_count = votes
+      winning_candidate = candidate_name
+      winning_percentage = vote_percentage
+  winning_candidate_summary = (
+    f"--------------------\n"
+    f"Winner: {winning_candidate}\n"
+    f"Winning Vote Count: {winning_count:,} \n"
+    f"Winning Percentage: {winning_percentage:.1f}%\n"
+    f"--------------------\n"
+  )
+  txt_file.write(winning_candidate_summary)
